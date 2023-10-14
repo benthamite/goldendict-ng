@@ -60,6 +60,18 @@
   :group 'goldendict-ng
   :type 'boolean)
 
+(defcustom goldendict-ng-initial-input-use-active-region t
+  "Whether to use the active region as the initial input for the search prompt."
+  :group 'goldendict-ng
+  :type 'boolean)
+
+(defcustom goldendict-ng-initial-input-use-thing-at-point t
+  "Whether to use the thing at point as the initial input for the search prompt.
+Note that if `goldendict-ng-initial-input-use-active-region' is non-nil and a
+region is active, it will take precedence over the thing at point."
+  :group 'goldendict-ng
+  :type 'boolean)
+
 ;;;; functions
 
 ;;;###autoload
@@ -91,9 +103,9 @@ If the region is active, the search string is the text within the region's
 boundaries. Otherwise the target is the thing at point."
   (goldendict-ng-check-executable-exists)
   (cond
-   ((region-active-p)
+   ((and (region-active-p) goldendict-ng-initial-input-use-active-region)
     (buffer-substring-no-properties (region-beginning) (region-end)))
-   (t
+   (goldendict-ng-initial-input-use-thing-at-point
     (thing-at-point 'symbol t))))
 
 (defun goldendict-ng-group-name-flag ()
