@@ -2,6 +2,10 @@
 
 `goldendict-ng` is a very simple Emacs package that lets the user perform a search of GoldenDict dictionaries from within Emacs. The package makes use of the command-line facilities provided by [goldendict-ng](https://github.com/xiaoyifang/goldendict-ng), a GoldenDict fork.
 
+## Requirements
+
+The package requires `goldendict-ng`. [Install it](https://xiaoyifang.github.io/goldendict-ng/install/) if you haven't done so.
+
 ## Installation
 
 ### Manual installation
