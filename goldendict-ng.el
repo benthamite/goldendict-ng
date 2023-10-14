@@ -68,7 +68,7 @@
 (defcustom goldendict-ng-initial-input-use-thing-at-point t
   "Whether to use the thing at point as the initial input for the search prompt.
 Note that if `goldendict-ng-initial-input-use-active-region' is non-nil and a
-region is active, it will take precedence over the thing at point."
+region is active, the region will take precedence over the thing at point."
   :group 'goldendict-ng
   :type 'boolean)
 
@@ -88,7 +88,7 @@ region is active, it will take precedence over the thing at point."
 				nil 0)))
 
 (defun goldendict-ng-check-executable-exists ()
-  "Signal a user error unless the `goldendict-ng' executable exists."
+  "Signal a user error unless the `goldendict-ng' executable is found."
   (unless (executable-find goldendict-ng-executable)
     (user-error "`goldendict-ng' not found. Please set `goldendict-ng-executable'")))
 
