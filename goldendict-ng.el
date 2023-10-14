@@ -65,7 +65,8 @@
 ;;;###autoload
 (defun goldendict-ng-search (string)
   "Search GoldenDict for STRING."
-  (interactive "sSearch string: ")
+  (interactive (list
+		(read-string "Search string: " (goldendict-ng-set-initial-input))))
   (goldendict-ng-check-string-nonempty string)
   (let ((command (format "%s %s" goldendict-ng-executable (shell-quote-argument string))))
     (call-process-shell-command (concat command
@@ -78,18 +79,31 @@
   "Signal a user error unless the `goldendict-ng' executable exists."
   (unless (executable-find goldendict-ng-executable)
     (user-error "`goldendict-ng' not found. Please set `goldendict-ng-executable'")))
+
 (defun goldendict-ng-check-string-nonempty (string)
   "Signal a user error if STRING is nonempty."
   (when (string-empty-p string)
     (user-error "Please provide a search string")))
+
+(defun goldendict-ng-set-initial-input ()
+  "Get the default search string.
+If the region is active, the search string is the text within the region's
+boundaries. Otherwise the target is the thing at point."
+  (goldendict-ng-check-executable-exists)
+  (cond
+   ((region-active-p)
+    (buffer-substring-no-properties (region-beginning) (region-end)))
+   (t
+    (thing-at-point 'symbol t))))
+
 (defun goldendict-ng-group-name-flag ()
   "Return the `group-name' flag if `goldendict-ng-group-prompt' is non-nil."
   (if goldendict-ng-groups-prompt
       (let* ((require-match (and goldendict-ng-groups-enforce
 				 (null goldendict-ng-groups)))
-             (group
-              (completing-read "Group: " goldendict-ng-groups nil require-match)))
-        (format " --group-name %s" (shell-quote-argument group)))
+	     (group
+	      (completing-read "Group: " goldendict-ng-groups nil require-match)))
+	(format " --group-name %s" (shell-quote-argument group)))
     ""))
 
 (defun goldendict-ng-no-tts-flag ()
