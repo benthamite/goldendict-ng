@@ -46,10 +46,14 @@ Here is a sample configuration:
   (setq goldendict-ng-groups-prompt t)
   (setq goldendict-ng-groups-enforce nil)
   (setq goldendict-ng-disable-tts nil)
-
+  (setq goldendict-ng-initial-input-use-active-region t)
+  (setq goldendict-ng-initial-input-use-thing-at-point t)
+  
   :general
   ("A-y" 'goldendict-ng-search))
 ```
+
+(Note that most of the above user options are set to their default values. They are included for the sake of illustration.)
 
 ## Usage
 
