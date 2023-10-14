@@ -79,7 +79,7 @@
 
 (defun goldendict-ng-group-name-flag ()
   "Return the `group-name' flag if `goldendict-ng-group-prompt' is non-nil."
-  (if goldendict-ng-group-prompt
+  (if goldendict-ng-groups-prompt
       (let* ((require-match (and goldendict-ng-groups-enforce
 				 (null goldendict-ng-groups)))
              (group
