@@ -42,8 +42,8 @@ Here is a sample configuration:
   :demand t
   :config
   (setq goldendict-ng-executable "/Applications/GoldenDict.app/Contents/MacOS/GoldenDict")
-  (setq goldendict-ng-group-prompt t)
   (setq goldendict-ng-groups '("EN" "ES"))
+  (setq goldendict-ng-groups-prompt t)
   (setq goldendict-ng-groups-enforce nil)
   (setq goldendict-ng-disable-tts nil)
 
