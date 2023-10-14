@@ -66,8 +66,6 @@
 (defun goldendict-ng-search (string)
   "Search GoldenDict for STRING."
   (interactive "sSearch string: ")
-  (unless (executable-find goldendict-ng-executable)
-    (error "`goldendict-ng' not found. Please set `goldendict-ng-executable'"))
   (when (string-empty-p string)
     (error "Please provide a search string"))
   (let ((command (format "%s %s" goldendict-ng-executable (shell-quote-argument string))))
@@ -77,6 +75,10 @@
 					" &")
 				nil 0)))
 
+(defun goldendict-ng-check-executable-exists ()
+  "Signal a user error unless the `goldendict-ng' executable exists."
+  (unless (executable-find goldendict-ng-executable)
+    (user-error "`goldendict-ng' not found. Please set `goldendict-ng-executable'")))
 (defun goldendict-ng-group-name-flag ()
   "Return the `group-name' flag if `goldendict-ng-group-prompt' is non-nil."
   (if goldendict-ng-groups-prompt
