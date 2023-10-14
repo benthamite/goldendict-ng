@@ -40,15 +40,15 @@
   :group 'goldendict-ng
   :type 'file)
 
-(defcustom goldendict-ng-group-prompt t
-  "Whether to prompt for a group when performing a search."
-  :group 'goldendict-ng
-  :type 'boolean)
-
 (defcustom goldendict-ng-groups '()
   "Groups to offer for completion if `goldendict-ng-group-prompt' is non-nil."
   :group 'goldendict-ng
   :type 'list)
+
+(defcustom goldendict-ng-groups-prompt t
+  "Whether to prompt for a group when performing a search."
+  :group 'goldendict-ng
+  :type 'boolean)
 
 (defcustom goldendict-ng-groups-enforce t
   "Whether to allow only groups listed in `goldendict-ng-groups'."
