@@ -50,7 +50,7 @@ Here is a sample configuration:
   (setq goldendict-ng-initial-input-use-thing-at-point t)
   
   :general
-  ("A-y" 'goldendict-ng-search))
+  ("A-g" 'goldendict-ng-search))
 ```
 
 (Note that most of the above user options are set to their default values. They are included for the sake of illustration.)
