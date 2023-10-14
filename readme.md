@@ -9,7 +9,7 @@
 Clone this repository and add this to your `init.el` file:
 
 ``` emacs-lisp
-(add-to-list 'load-path "path/to/goldendict-ng"
+(add-to-list 'load-path "path/to/goldendict-ng")
 ```
 
 where `"path/to/goldendict-ng"` is the path to the local repository you just cloned.
