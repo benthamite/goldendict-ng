@@ -64,8 +64,7 @@
 
 ;;;###autoload
 (defun goldendict-ng-search (string)
-  "Search GoldenDict for STRING.
-If `goldendict-ng-group-prompt' is non-nil, prompt the user for a group."
+  "Search GoldenDict for STRING."
   (interactive "sSearch string: ")
   (unless (executable-find goldendict-ng-executable)
     (error "`goldendict-ng' not found. Please set `goldendict-ng-executable'"))
