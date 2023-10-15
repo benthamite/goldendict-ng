@@ -156,10 +156,11 @@ active, the settings for that user option will take precedence."
 	((goldendict-ng-bypass-prompt-word-at-point-p)
 	 (goldendict-ng-search-string (goldendict-ng-get-word-at-point)))
 	(t
-	 (goldendict-ng-search-string
-	  (read-string "Search string: " (goldendict-ng-get-initial-input))))))
+	 (goldendict-ng-search-string (goldendict-ng-read-string)))))
 
-(make-obsolete 'goldendict-ng-set-initial-input nil "0.2.0")
+(defun goldendict-ng-read-string ()
+  "Read a string."
+  (read-string "Search string: " (goldendict-ng-get-initial-input)))
 
 (defun goldendict-ng-search-string (string)
   "Search GoldenDict for string STRING."
