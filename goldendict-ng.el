@@ -207,6 +207,23 @@ active, the settings for that user option will take precedence."
   (when (string-empty-p string)
     (user-error "Please provide a search string")))
 
+;;;###autoload
+(defun goldendict-ng-version ()
+  "Print version info."
+  (interactive)
+  (require 'find-func)
+  (let ((emacs-version
+	 (with-temp-buffer
+	   (insert-file-contents (find-library-name "goldendict-ng"))
+	   (let ((contents (buffer-string)))
+	     (cond ((string-match ";; Version: \\([^ ;]+\\)" contents)
+		    (match-string-no-properties 1 contents))
+		   ((string-match "-pkg.el\"[ \f\t\n\r\v]*(([\f\t\n\r\v]*)[ \f\t\n\r\v]*\"\\([^ ;]+\\)\"" contents)
+		    (match-string-no-properties 1 contents))))))
+	(app-version
+	 (shell-command-to-string (format "%s --version" goldendict-ng-executable))))
+    (message "goldendict-ng Emacs package version %s\n\n%s" (string-trim emacs-version) app-version)))
+
 
 (provide 'goldendict-ng)
 
