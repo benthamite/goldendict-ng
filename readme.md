@@ -4,7 +4,7 @@
 
 ## Requirements
 
-As noted, The package requires `goldendict-ng`. [Install it](https://xiaoyifang.github.io/goldendict-ng/install/) if you haven't done so.
+As noted, the package requires `goldendict-ng`. [Install it](https://xiaoyifang.github.io/goldendict-ng/install/) if you haven't done so.
 
 ## Installation
 
@@ -42,11 +42,12 @@ Here is a sample configuration:
   :demand t
   :config
   (setq goldendict-ng-executable "/Applications/GoldenDict.app/Contents/MacOS/GoldenDict")
-  (setq goldendict-ng-groups '(("Spanish" . "es")
-              			       ("English" . "en")
-			                   ("English core" . "en")
-            			       ("English thesauri" . "en")
-            			       ("French" . "fr")))
+  (setq goldendict-ng-groups
+      '(("Spanish" . "es")
+        ("English" . "en")
+        ("English core" . "en")
+        ("English thesauri" . "en")
+        ("French" . "fr")))
 							   
   ;; all user options below are set to their default values, for illustration purposes
   (setq goldendict-ng-groups-enforce nil)
