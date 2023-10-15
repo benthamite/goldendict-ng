@@ -60,7 +60,7 @@ Here is a sample configuration:
   (setq goldendict-ng-disable-tts nil)
   
   :general
-  ("A-y" 'goldendict-ng-search))
+  ("A-g" 'goldendict-ng-search))
 ```
 
 ## Usage
