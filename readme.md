@@ -63,8 +63,6 @@ Here is a sample configuration:
   ("A-y" 'goldendict-ng-search))
 ```
 
-(Note that most of the above user options are set to their default values. They are included for the sake of illustration.)
-
 ## Usage
 
 `M-x goldendict-ng-search`.
