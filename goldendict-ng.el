@@ -85,7 +85,7 @@ default."
 
 (defcustom goldendict-ng-show-all-group t
   "Whether to display the \"All\" group in addition to the user-specified groups.
-GoldenDict features a speciall \"All\" group that, when selected, shows all the
+GoldenDict features a special \"All\" group that, when selected, shows all the
 dictionaries in the database. If set to non-nil, display this group next to the
 groups defined in `goldendict-ng-groups'.
 
