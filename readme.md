@@ -1,10 +1,10 @@
 # goldendict-ng: Search GoldenDict from within Emacs
 
-`goldendict-ng` is a very simple Emacs package that lets the user perform a search of GoldenDict dictionaries from within Emacs. The package makes use of the command-line facilities provided by [goldendict-ng](https://github.com/xiaoyifang/goldendict-ng), a GoldenDict fork.
+`goldendict-ng` supports searching GoldenDict dictionaries from within Emacs. The package makes use of the command-line facilities provided by [goldendict-ng](https://github.com/xiaoyifang/goldendict-ng), a GoldenDict fork.
 
 ## Requirements
 
-The package requires `goldendict-ng`. [Install it](https://xiaoyifang.github.io/goldendict-ng/install/) if you haven't done so.
+As noted, The package requires `goldendict-ng`. [Install it](https://xiaoyifang.github.io/goldendict-ng/install/) if you haven't done so.
 
 ## Installation
 
@@ -37,20 +37,30 @@ Here is a sample configuration:
 ``` emacs-lisp
 (use-package goldendict-ng
   :elpaca (goldendict-ng
-           :host github
+	   :host github
 	   :repo "benthamite/goldendict-ng")
   :demand t
   :config
   (setq goldendict-ng-executable "/Applications/GoldenDict.app/Contents/MacOS/GoldenDict")
-  (setq goldendict-ng-groups '("EN" "ES"))
-  (setq goldendict-ng-groups-prompt t)
+  (setq goldendict-ng-groups '(("Spanish" . "es")
+              			       ("English" . "en")
+			                   ("English core" . "en")
+            			       ("English thesauri" . "en")
+            			       ("French" . "fr")))
+							   
+  ;; all user options below are set to their default values, for illustration purposes
   (setq goldendict-ng-groups-enforce nil)
+  (setq goldendict-ng-narrow-groups-to-matching-langs nil)
+  (setq goldendict-ng-show-all-group t)
+  (setq goldendict-ng-use-active-region 'initial-input)
+  (setq goldendict-ng-use-word-at-point 'initial-input)
+  (setq goldendict-ng-main-window nil)
+  (setq goldendict-ng-scanpopup nil)
+  (setq goldendict-ng-reset-window-state nil)
   (setq goldendict-ng-disable-tts nil)
-  (setq goldendict-ng-initial-input-use-active-region t)
-  (setq goldendict-ng-initial-input-use-thing-at-point t)
   
   :general
-  ("A-g" 'goldendict-ng-search))
+  ("A-y" 'goldendict-ng-search))
 ```
 
 (Note that most of the above user options are set to their default values. They are included for the sake of illustration.)
