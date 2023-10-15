@@ -211,7 +211,7 @@ active, the settings for that user option will take precedence."
 (defun goldendict-ng-check-string-nonempty (string)
   "Signal a user error if STRING is an empty string."
   (when (string-empty-p string)
-    (user-error "Please provide a search string")))
+    (user-error "Please provide a nonempty search string")))
 
 ;;;###autoload
 (defun goldendict-ng-version ()
