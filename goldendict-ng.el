@@ -71,8 +71,8 @@ default."
 (defcustom goldendict-ng-narrow-groups-to-matching-languages nil
   "Whether to narrow the groups to those whose language matches the search string.
 If non-nil, restrict the list of groups offered as completion candidates to the
-groups in the `goldendict-ng-groups' user option whose `:language' property
-matches one of the languages detected in the search string.
+groups in the `goldendict-ng-groups' user option whose language matches one of
+the languages detected in the search string.
 
 This user option has no effect if `goldendict-ng-groups' is empty, as it is by
 default."
@@ -299,7 +299,7 @@ STRING is the search string."
     (not (member nil results))))
 
 (defun goldendict-ng-get-unique-languages ()
-  "Return a list of unique `:language' values in `goldendict-ng-groups'."
+  "Return a list of unique language values in `goldendict-ng-groups'."
   (delq nil (delete-dups (mapcar 'cdr goldendict-ng-groups))))
 
 (defun goldendict-ng-get-matching-languages (string)
