@@ -275,6 +275,47 @@ STRING is the search string."
 
 (make-obsolete 'goldendict-ng-no-tts-flag nil "0.2.0")
 
+;;;;; check language
+
+(defun goldendict-ng-word-is-in-language-p (word language)
+  "Return t iff WORD exists in LANGUAGE."
+  (unless (executable-find "aspell")
+    (user-error "Language detection requires `GNU Aspell'. Go here to install it:
+`http://aspell.net/'"))
+  (with-temp-buffer
+    (call-process-shell-command
+     (format "echo %s | aspell --lang=%s list" (shell-quote-argument word) language) nil t)
+    (<= (buffer-size) 1)))
+
+(defun goldendict-ng-string-is-in-language-p (string language)
+  "Return t iff each word in STRING exists in LANGUAGE."
+  (let ((results (mapcar (lambda (word)
+			   (goldendict-ng-word-is-in-language-p word language))
+			 (split-string string))))
+    (not (member nil results))))
+
+(defun goldendict-ng-get-unique-languages ()
+  "Return a list of unique `:language' values in `goldendict-ng-groups'."
+  (delq nil (delete-dups (mapcar 'cdr goldendict-ng-groups))))
+
+(defun goldendict-ng-get-matching-languages (string)
+  "Return a list of relevant languages detected in STRING.
+The languages to be checked against STRING are each of the languages set in
+`goldendict-ng-groups', i.e., the list of languages returned by
+`goldendict-ng-get-unique-languages'."
+  (let (result)
+    (dolist (lang (goldendict-ng-get-unique-languages))
+      (when (goldendict-ng-string-is-in-language-p string lang)
+	(setq result (cons lang result))))
+    result))
+
+(defun goldendict-ng-get-matching-groups (string)
+  "Return the groups whose languages are detected in STRING."
+  (let ((result '()))
+    (dolist (pair goldendict-ng-groups)
+      (when (member (cdr pair) (goldendict-ng-get-matching-languages string))
+	(push (car pair) result)))
+    result))
 
 (provide 'goldendict-ng)
 
