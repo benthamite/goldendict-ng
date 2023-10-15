@@ -57,30 +57,85 @@ default."
   :group 'goldendict-ng
   :type '(alist :key-type string :value-type string))
 
-(defcustom goldendict-ng-groups-prompt t
-  "Whether to prompt for a group when performing a search."
+(make-obsolete-variable 'goldendict-ng-groups-prompt nil "0.2.0")
+
+(defcustom goldendict-ng-groups-enforce nil
+  "Whether to allow only groups listed in `goldendict-ng-groups'.
+If non-nil, force the user to select one of the completion candidates.
+
+This user option has no effect if `goldendict-ng-groups' is empty, as it is by
+default."
   :group 'goldendict-ng
   :type 'boolean)
 
-(defcustom goldendict-ng-groups-enforce t
-  "Whether to allow only groups listed in `goldendict-ng-groups'."
+(defcustom goldendict-ng-narrow-groups-to-matching-langs nil
+  "Whether to narrow the groups to those whose language matches the search string.
+If non-nil, restrict the list of groups offered as completion candidates to the
+groups in the `goldendict-ng-groups' user option whose `:language' property
+matches one of the languages detected in the search string.
+
+This user option has no effect if `goldendict-ng-groups' is empty, as it is by
+default."
   :group 'goldendict-ng
   :type 'boolean)
 
-(defcustom goldendict-ng-disable-tts nil
+(defcustom goldendict-ng-show-all-group t
+  "Whether to display the \"All\" group in addition to the user-specified groups.
+GoldenDict features a speciall \"All\" group that, when selected, shows all the
+dictionaries in the database. If set to non-nil, display this group next to the
+groups defined in `goldendict-ng-groups'.
+
+This user option has no effect if `goldendict-ng-groups' is empty, as it is by
+default."
+  :group 'goldendict-ng
+  :type 'boolean)
+
+(defcustom goldendict-ng-use-active-region 'initial-input
+  "Whether to use the active region when performing a search.
+If set to `bypass-prompt', perform a search using the text in the active region
+straight away. If set to `initial-input' or any other non-nil value, use the
+text in the active region as the initial input for the search prompt."
+  :group 'goldendict-ng
+  :type '(choice
+	  (const :tag "Do not use the active region" nil)
+	  (const :tag "Use the active region, bypassing the search prompt" bypass-prompt)
+	  (const :tag "Use the active region as the initial input" initial-input)))
+
+(make-obsolete-variable 'goldendict-ng-initial-input-use-active-region nil "0.2.0")
+
+(defcustom goldendict-ng-use-word-at-point 'initial-input
+  "Whether to use the thing at point when performing a search.
+If set to `bypass-prompt', perform a search using the thing at point straight
+away. If set to `initial-input' or any other non-nil value, use the thing at
+point as the initial input for the search prompt.
+
+Note that if `goldendict-ng-use-active-region' is non-nil and a region is
+active, the settings for that user option will take precedence."
+  :group 'goldendict-ng
+  :type '(choice
+	  (const :tag "Do not use the thing at point" nil)
+	  (const :tag "Use the thing at point, bypassing the search prompt" bypass-prompt)
+	  (const :tag "Use the thing at point as the initial input" initial-input)))
+
+(make-obsolete-variable 'goldendict-ng-initial-input-use-word-at-point nil "0.2.0")
+
+(defcustom goldendict-ng-main-window nil
+  "Whether to force the word to be translated in the main window."
+  :group 'goldendict-ng
+  :type 'boolean)
+
+(defcustom goldendict-ng-scanpopup nil
+  "Whether to Force the word to be translated in scanpopup."
+  :group 'goldendict-ng
+  :type 'boolean)
+
+(defcustom goldendict-ng-reset-window-state nil
+  "Whether to reset the window state."
+  :group 'goldendict-ng
+  :type 'boolean)
+
+(defcustom goldendict-ng-no-tts nil
   "Whether to disable TTS."
-  :group 'goldendict-ng
-  :type 'boolean)
-
-(defcustom goldendict-ng-initial-input-use-active-region t
-  "Whether to use the active region as the initial input for the search prompt."
-  :group 'goldendict-ng
-  :type 'boolean)
-
-(defcustom goldendict-ng-initial-input-use-thing-at-point t
-  "Whether to use the thing at point as the initial input for the search prompt.
-Note that if `goldendict-ng-initial-input-use-active-region' is non-nil and a
-region is active, it will take precedence over the thing at point."
   :group 'goldendict-ng
   :type 'boolean)
 
