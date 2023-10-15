@@ -24,7 +24,9 @@
 
 ;;; Commentary:
 
-;; This package uses the command line interface provided by `goldendict-ng' (https://xiaoyifang.github.io/goldendict-ng/topic_commandline/) to enable searching GoldenDict dictionaries from within Emacs.
+;; This package uses the command line interface provided by `goldendict-ng'
+;; (https://xiaoyifang.github.io/goldendict-ng/topic_commandline/) to enable
+;; searching GoldenDict dictionaries from within Emacs.
 
 ;;; Code:
 
