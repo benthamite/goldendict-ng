@@ -57,8 +57,6 @@ default."
   :group 'goldendict-ng
   :type '(alist :key-type string :value-type string))
 
-(make-obsolete-variable 'goldendict-ng-groups-prompt nil "0.2.0")
-
 (defcustom goldendict-ng-groups-enforce nil
   "Whether to allow only groups listed in `goldendict-ng-groups'.
 If non-nil, force the user to select one of the completion candidates.
@@ -78,10 +76,6 @@ This user option has no effect if `goldendict-ng-groups' is empty, as it is by
 default."
   :group 'goldendict-ng
   :type 'boolean)
-
-(make-obsolete-variable 'goldendict-ng-narrow-groups-to-matching-langs
-			'goldendict-ng-narrow-groups-to-matching-languages
-			"0.2.0")
 
 (defcustom goldendict-ng-show-all-group t
   "Whether to display the \"All\" group in addition to the user-specified groups.
@@ -105,8 +99,6 @@ text in the active region as the initial input for the search prompt."
 	  (const :tag "Use the active region, bypassing the search prompt" bypass-prompt)
 	  (const :tag "Use the active region as the initial input" initial-input)))
 
-(make-obsolete-variable 'goldendict-ng-initial-input-use-active-region nil "0.2.0")
-
 (defcustom goldendict-ng-use-word-at-point 'initial-input
   "Whether to use the thing at point when performing a search.
 If set to `bypass-prompt', perform a search using the thing at point straight
@@ -120,8 +112,6 @@ active, the settings for that user option will take precedence."
 	  (const :tag "Do not use the thing at point" nil)
 	  (const :tag "Use the thing at point, bypassing the search prompt" bypass-prompt)
 	  (const :tag "Use the thing at point as the initial input" initial-input)))
-
-(make-obsolete-variable 'goldendict-ng-initial-input-use-word-at-point nil "0.2.0")
 
 (defcustom goldendict-ng-main-window nil
   "Whether to force the word to be translated in the main window."
@@ -142,6 +132,15 @@ active, the settings for that user option will take precedence."
   "Whether to disable TTS."
   :group 'goldendict-ng
   :type 'boolean)
+
+;;;;; obsolete variables
+
+(make-obsolete-variable 'goldendict-ng-groups-prompt nil "0.2.0")
+(make-obsolete-variable 'goldendict-ng-narrow-groups-to-matching-langs
+			'goldendict-ng-narrow-groups-to-matching-languages
+			"0.2.0")
+(make-obsolete-variable 'goldendict-ng-initial-input-use-active-region nil "0.2.0")
+(make-obsolete-variable 'goldendict-ng-initial-input-use-word-at-point nil "0.2.0")
 
 ;;;; functions
 
@@ -241,8 +240,6 @@ STRING is the search string."
 				   nil goldendict-ng-groups-enforce)))
       (format " --group-name %s" (shell-quote-argument group)))))
 
-(make-obsolete 'goldendict-ng-group-name-flag nil "0.2.0")
-
 (defun goldendict-ng-get-group-candidates (string)
   "Set the groups to be offered as completion candidates for STRING."
   (let ((user-groups
@@ -276,8 +273,6 @@ STRING is the search string."
 (defun goldendict-ng-set-no-tts-flag ()
   "Set the value of the `no-tts' flag."
   (if goldendict-ng-no-tts " --no-tts" ""))
-
-(make-obsolete 'goldendict-ng-no-tts-flag nil "0.2.0")
 
 ;;;;; check language
 
@@ -320,6 +315,12 @@ The languages to be checked against STRING are each of the languages set in
       (when (member (cdr pair) (goldendict-ng-get-matching-languages string))
 	(push (car pair) result)))
     result))
+
+;;;;; obsoleted functions
+
+(make-obsolete 'goldendict-ng-set-initial-input nil "0.2.0")
+(make-obsolete 'goldendict-ng-group-name-flag nil "0.2.0")
+(make-obsolete 'goldendict-ng-no-tts-flag nil "0.2.0")
 
 (provide 'goldendict-ng)
 
