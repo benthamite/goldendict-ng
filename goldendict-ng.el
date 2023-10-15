@@ -5,7 +5,7 @@
 ;; Author: Pablo Stafforini
 ;; URL: https://github.com/benthamite/goldendict-ng
 ;; Package-Requires: ((emacs "24.1"))
-;; Version: 0.1
+;; Version: 0.2.0
 
 ;; This file is NOT part of GNU Emacs.
 
