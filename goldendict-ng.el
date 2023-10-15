@@ -202,7 +202,7 @@ active, the settings for that user option will take precedence."
       (goldendict-ng-get-word-at-point)))
 
 (defun goldendict-ng-check-executable-exists ()
-  "Signal a user error unless the `goldendict-ng' executable is found."
+  "Signal a user error if the `goldendict-ng' executable is not found."
   (unless (executable-find goldendict-ng-executable)
     (user-error "`goldendict-ng' not found. Please set `goldendict-ng-executable'")))
 
