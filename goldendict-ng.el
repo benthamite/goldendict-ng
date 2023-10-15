@@ -151,6 +151,7 @@ active, the settings for that user option will take precedence."
 (defun goldendict-ng-search ()
   "Search GoldenDict."
   (interactive)
+  (goldendict-ng-check-executable-exists)
   (cond ((goldendict-ng-bypass-prompt-string-in-region-p)
 	 (goldendict-ng-search-string (goldendict-ng-get-string-in-region)))
 	((goldendict-ng-bypass-prompt-word-at-point-p)
@@ -197,7 +198,6 @@ active, the settings for that user option will take precedence."
 
 (defun goldendict-ng-get-initial-input ()
   "Get the default search string."
-  (goldendict-ng-check-executable-exists)
   (or (goldendict-ng-get-string-in-region)
       (goldendict-ng-get-word-at-point)))
 
