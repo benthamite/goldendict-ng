@@ -68,7 +68,7 @@ default."
   :group 'goldendict-ng
   :type 'boolean)
 
-(defcustom goldendict-ng-narrow-groups-to-matching-langs nil
+(defcustom goldendict-ng-narrow-groups-to-matching-languages nil
   "Whether to narrow the groups to those whose language matches the search string.
 If non-nil, restrict the list of groups offered as completion candidates to the
 groups in the `goldendict-ng-groups' user option whose `:language' property
@@ -78,6 +78,10 @@ This user option has no effect if `goldendict-ng-groups' is empty, as it is by
 default."
   :group 'goldendict-ng
   :type 'boolean)
+
+(make-obsolete-variable 'goldendict-ng-narrow-groups-to-matching-langs
+			'goldendict-ng-narrow-groups-to-matching-languages
+			"0.2.0")
 
 (defcustom goldendict-ng-show-all-group t
   "Whether to display the \"All\" group in addition to the user-specified groups.
@@ -242,7 +246,7 @@ STRING is the search string."
 (defun goldendict-ng-get-group-candidates (string)
   "Set the groups to be offered as completion candidates for STRING."
   (let ((user-groups
-	 (if goldendict-ng-narrow-groups-to-matching-langs
+	 (if goldendict-ng-narrow-groups-to-matching-languages
 	     (goldendict-ng-get-matching-groups string)
 	   (mapcar 'car goldendict-ng-groups))))
     (when goldendict-ng-show-all-group
