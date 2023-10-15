@@ -141,55 +141,72 @@ active, the settings for that user option will take precedence."
 
 ;;;; functions
 
+;;;;; main
+
 ;;;###autoload
-(defun goldendict-ng-search (string)
-  "Search GoldenDict for STRING."
-  (interactive (list
-		(read-string "Search string: " (goldendict-ng-set-initial-input))))
+(defun goldendict-ng-search ()
+  "Search GoldenDict."
+  (interactive)
+  (cond ((goldendict-ng-bypass-prompt-string-in-region-p)
+	 (goldendict-ng-search-string (goldendict-ng-get-string-in-region)))
+	((goldendict-ng-bypass-prompt-word-at-point-p)
+	 (goldendict-ng-search-string (goldendict-ng-get-word-at-point)))
+	(t
+	 (goldendict-ng-search-string
+	  (read-string "Search string: " (goldendict-ng-get-initial-input))))))
+
+(make-obsolete 'goldendict-ng-set-initial-input nil "0.2.0")
+
+(defun goldendict-ng-search-string (string)
+  "Search GoldenDict for string STRING."
   (goldendict-ng-check-string-nonempty string)
   (let ((command (format "%s %s" goldendict-ng-executable (shell-quote-argument string))))
     (call-process-shell-command (concat command
-					(goldendict-ng-group-name-flag)
-					(goldendict-ng-no-tts-flag)
+					(goldendict-ng-set-group-name-flag string)
+					(goldendict-ng-set-main-window-flag)
+					(goldendict-ng-set-scanpopup-flag)
+					(goldendict-ng-set-reset-window-state-flag)
+					(goldendict-ng-set-no-tts-flag)
 					" &")
 				nil 0)))
 
+(defun goldendict-ng-bypass-prompt-string-in-region-p ()
+  "Return t iff the prompt should be bypassed with the string in region."
+  (and (region-active-p)
+       (eq goldendict-ng-use-active-region 'bypass-prompt)))
+
+(defun goldendict-ng-bypass-prompt-word-at-point-p ()
+  "Return t iff the prompt should be bypassed with the word at point."
+  (and (thing-at-point 'word t)
+       (eq goldendict-ng-use-word-at-point 'bypass-prompt)))
+
+(defun goldendict-ng-get-string-in-region ()
+  "If the region is active, get the string in this region."
+  (when (and (region-active-p) goldendict-ng-use-active-region)
+    (buffer-substring-no-properties
+     (region-beginning) (region-end))))
+
+(defun goldendict-ng-get-word-at-point ()
+  "If point is on a word, return it."
+  (when goldendict-ng-use-word-at-point
+    (thing-at-point 'word t)))
+
+(defun goldendict-ng-get-initial-input ()
+  "Get the default search string."
+  (goldendict-ng-check-executable-exists)
+  (or (goldendict-ng-get-string-in-region)
+      (goldendict-ng-get-word-at-point)))
+
 (defun goldendict-ng-check-executable-exists ()
-  "Signal a user error unless the `goldendict-ng' executable exists."
+  "Signal a user error unless the `goldendict-ng' executable is found."
   (unless (executable-find goldendict-ng-executable)
     (user-error "`goldendict-ng' not found. Please set `goldendict-ng-executable'")))
 
 (defun goldendict-ng-check-string-nonempty (string)
-  "Signal a user error if STRING is nonempty."
+  "Signal a user error if STRING is an empty string."
   (when (string-empty-p string)
     (user-error "Please provide a search string")))
 
-(defun goldendict-ng-set-initial-input ()
-  "Get the default search string.
-If the region is active, the search string is the text within the region's
-boundaries. Otherwise the target is the thing at point."
-  (goldendict-ng-check-executable-exists)
-  (cond
-   ((and (region-active-p) goldendict-ng-initial-input-use-active-region)
-    (buffer-substring-no-properties (region-beginning) (region-end)))
-   (goldendict-ng-initial-input-use-thing-at-point
-    (thing-at-point 'symbol t))))
-
-(defun goldendict-ng-group-name-flag ()
-  "Return the `group-name' flag if `goldendict-ng-group-prompt' is non-nil."
-  (if goldendict-ng-groups-prompt
-      (let* ((require-match (and goldendict-ng-groups-enforce
-				 (null goldendict-ng-groups)))
-	     (group
-	      (completing-read "Group: " goldendict-ng-groups nil require-match)))
-	(format " --group-name %s" (shell-quote-argument group)))
-    ""))
-
-(defun goldendict-ng-no-tts-flag ()
-  "Return the `no-tts' flag if `goldendict-ng-disable-tts' is non-nil."
-  (if goldendict-ng-disable-tts
-      " --no-tts"
-    ""))
 
 (provide 'goldendict-ng)
 
