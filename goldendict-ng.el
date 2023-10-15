@@ -224,6 +224,57 @@ active, the settings for that user option will take precedence."
 	 (shell-command-to-string (format "%s --version" goldendict-ng-executable))))
     (message "goldendict-ng Emacs package version %s\n\n%s" (string-trim emacs-version) app-version)))
 
+;;;;; set flags
+
+;;;;;; --group-name
+
+(defun goldendict-ng-set-group-name-flag (string)
+  "Set the value of the `group-name' flag.
+STRING is the search string."
+  (if (null goldendict-ng-groups)
+      ""
+    (let* ((group (completing-read "Group: " (goldendict-ng-get-group-candidates string)
+				   nil goldendict-ng-groups-enforce)))
+      (format " --group-name %s" (shell-quote-argument group)))))
+
+(make-obsolete 'goldendict-ng-group-name-flag nil "0.2.0")
+
+(defun goldendict-ng-get-group-candidates (string)
+  "Set the groups to be offered as completion candidates for STRING."
+  (let ((user-groups
+	 (if goldendict-ng-narrow-groups-to-matching-langs
+	     (goldendict-ng-get-matching-groups string)
+	   (mapcar 'car goldendict-ng-groups))))
+    (when goldendict-ng-show-all-group
+      (push "All" user-groups))
+    user-groups))
+
+;;;;;; --main-window
+
+(defun goldendict-ng-set-main-window-flag ()
+  "Set the value of the `main-window' flag."
+  (if goldendict-ng-main-window " --main-window" ""))
+
+;;;;;; --scanpopup
+
+(defun goldendict-ng-set-scanpopup-flag ()
+  "Set the value of the `' flag."
+  (if goldendict-ng-scanpopup " --scanpopup" ""))
+
+;;;;;; --reset-window-state
+
+(defun goldendict-ng-set-reset-window-state-flag ()
+  "Set the value of the `reset-window-state' flag."
+  (if goldendict-ng-reset-window-state " --reset-window-state" ""))
+
+;;;;;; --no-tts
+
+(defun goldendict-ng-set-no-tts-flag ()
+  "Set the value of the `no-tts' flag."
+  (if goldendict-ng-no-tts " --no-tts" ""))
+
+(make-obsolete 'goldendict-ng-no-tts-flag nil "0.2.0")
+
 
 (provide 'goldendict-ng)
 
