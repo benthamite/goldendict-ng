@@ -43,11 +43,11 @@ Here is a sample configuration:
   :config
   (setq goldendict-ng-executable "/Applications/GoldenDict.app/Contents/MacOS/GoldenDict")
   (setq goldendict-ng-groups
-  '(("English dictionaries" . "en")
-    ("English encyclopedias" . "en")
-    ("French dictionaries" . "fr")
-    ("French encyclopedias" . "fr"))
-							   
+        '(("English dictionaries" . "en")
+          ("English encyclopedias" . "en")
+          ("French dictionaries" . "fr")
+          ("French encyclopedias" . "fr"))
+	
   ;; all user options below are set to their default values, for illustration purposes
   (setq goldendict-ng-groups-enforce nil)
   (setq goldendict-ng-narrow-groups-to-matching-langs nil)
