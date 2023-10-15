@@ -41,9 +41,21 @@
   :type 'file)
 
 (defcustom goldendict-ng-groups '()
-  "Groups to offer for completion if `goldendict-ng-group-prompt' is non-nil."
+  "Association list of of dictionary groups and their languages.
+The first element of the association list is the name of the group and the
+second element is the language of the dictionaries in that group.
+
+Here is an example:
+
+  '((\"English dictionaries\" . \"en\")
+    (\"English encyclopedias\" . \"en\")
+    (\"French dictionaries\" . \"fr\")
+    (\"French encyclopedias\" . \"fr\"))
+
+Note that the group prompt will be bypassed if the list is empty, as it is by
+default."
   :group 'goldendict-ng
-  :type 'list)
+  :type '(alist :key-type string :value-type string))
 
 (defcustom goldendict-ng-groups-prompt t
   "Whether to prompt for a group when performing a search."
