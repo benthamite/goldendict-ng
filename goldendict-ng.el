@@ -47,7 +47,7 @@
 (defcustom goldendict-ng-groups '()
   "Association list of of dictionary groups and their languages.
 The first element of the association list is the name of the group and the
-second element is the language of the dictionaries in that group.
+second element is the source language of the dictionaries in that group.
 
 Here is an example:
 
