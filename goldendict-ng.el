@@ -257,7 +257,7 @@ STRING is the search string."
       (format " --group-name %s" (shell-quote-argument selection)))))
 
 (defun goldendict-ng-get-group-candidates (string)
-  "Set the groups to be offered as completion candidates for STRING."
+  "Return the groups to be offered as completion candidates for STRING."
   (let ((user-groups
 	 (if goldendict-ng-narrow-groups-to-matching-languages
 	     (goldendict-ng-get-matching-groups string)
