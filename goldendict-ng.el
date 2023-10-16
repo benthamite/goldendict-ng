@@ -252,9 +252,9 @@ active, the settings for that user option will take precedence."
 STRING is the search string."
   (if (null goldendict-ng-groups)
       ""
-    (let* ((group (completing-read "Group: " (goldendict-ng-get-group-candidates string)
-				   nil goldendict-ng-groups-enforce)))
-      (format " --group-name %s" (shell-quote-argument group)))))
+    (let* ((candidates (goldendict-ng-get-group-candidates string))
+	   (selection (goldendict-ng-get-group-selection candidates)))
+      (format " --group-name %s" (shell-quote-argument selection)))))
 
 (defun goldendict-ng-get-group-candidates (string)
   "Set the groups to be offered as completion candidates for STRING."
@@ -265,6 +265,12 @@ STRING is the search string."
     (when goldendict-ng-show-all-group
       (push "All" user-groups))
     user-groups))
+
+(defun goldendict-ng-get-group-selection (candidates)
+  "Return the selection for the group CANDIDATES."
+  (if (and goldendict-ng-auto-select-sole-candidate (length= candidates 1))
+      (car candidates)
+    (completing-read "Group: " candidates nil goldendict-ng-groups-enforce)))
 
 ;;;;;; --main-window
 
