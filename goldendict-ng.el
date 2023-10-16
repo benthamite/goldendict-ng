@@ -92,6 +92,11 @@ default."
   :group 'goldendict-ng
   :type 'boolean)
 
+(defcustom goldendict-ng-auto-select-sole-candidate nil
+  "Whether to automatically select a group when it is the sole candidate."
+  :group 'goldendict-ng
+  :type 'boolean)
+
 ;;;;; other user options
 
 (defcustom goldendict-ng-use-active-region 'initial-input

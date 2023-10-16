@@ -52,6 +52,7 @@ Here is a sample configuration:
   ;; all user options below are set to their default values, for illustration purposes
   (setq goldendict-ng-groups-enforce nil)
   (setq goldendict-ng-show-all-group t)
+  (setq goldendict-ng-bypass-prompt-when-sole-candidate nil)
   (setq goldendict-ng-use-active-region 'initial-input)
   (setq goldendict-ng-use-word-at-point 'initial-input)
   (setq goldendict-ng-main-window nil)
