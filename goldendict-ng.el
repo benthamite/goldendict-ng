@@ -190,8 +190,12 @@ active, the settings for that user option will take precedence."
 (defun goldendict-ng-get-string-in-region ()
   "If the region is active, get the string in this region."
   (when (and (region-active-p) goldendict-ng-use-active-region)
-    (buffer-substring-no-properties
-     (region-beginning) (region-end))))
+    (pcase major-mode
+      ('pdf-view-mode
+       (car (pdf-view-active-region-text)))
+      (_
+       (buffer-substring-no-properties
+	(region-beginning) (region-end))))))
 
 (defun goldendict-ng-get-word-at-point ()
   "If point is on a word, return it."
