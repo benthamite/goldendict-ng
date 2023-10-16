@@ -169,9 +169,10 @@ active, the settings for that user option will take precedence."
 	(t
 	 (goldendict-ng-search-string (goldendict-ng-read-string)))))
 
-(defun goldendict-ng-read-string ()
-  "Read a string."
-  (read-string "Search string: " (goldendict-ng-get-initial-input)))
+(defun goldendict-ng-check-executable-exists ()
+  "Signal a user error if the `goldendict-ng' executable is not found."
+  (unless (executable-find goldendict-ng-executable)
+    (user-error "`goldendict-ng' not found. Please set `goldendict-ng-executable'")))
 
 (defun goldendict-ng-search-string (string)
   "Search GoldenDict for string STRING."
@@ -186,15 +187,15 @@ active, the settings for that user option will take precedence."
 					" &")
 				nil 0)))
 
+(defun goldendict-ng-check-string-nonempty (string)
+  "Signal a user error if STRING is an empty string."
+  (when (string-empty-p string)
+    (user-error "Please provide a nonempty search string")))
+
 (defun goldendict-ng-bypass-prompt-string-in-region-p ()
   "Return t iff the prompt should be bypassed with the string in region."
   (and (region-active-p)
        (eq goldendict-ng-use-active-region 'bypass-prompt)))
-
-(defun goldendict-ng-bypass-prompt-word-at-point-p ()
-  "Return t iff the prompt should be bypassed with the word at point."
-  (and (thing-at-point 'word t)
-       (eq goldendict-ng-use-word-at-point 'bypass-prompt)))
 
 (defun goldendict-ng-get-string-in-region ()
   "If the region is active, get the string in this region."
@@ -206,42 +207,24 @@ active, the settings for that user option will take precedence."
        (buffer-substring-no-properties
 	(region-beginning) (region-end))))))
 
+(defun goldendict-ng-bypass-prompt-word-at-point-p ()
+  "Return t iff the prompt should be bypassed with the word at point."
+  (and (thing-at-point 'word t)
+       (eq goldendict-ng-use-word-at-point 'bypass-prompt)))
+
 (defun goldendict-ng-get-word-at-point ()
   "If point is on a word, return it."
   (when goldendict-ng-use-word-at-point
     (thing-at-point 'word t)))
 
+(defun goldendict-ng-read-string ()
+  "Read a string."
+  (read-string "Search string: " (goldendict-ng-get-initial-input)))
+
 (defun goldendict-ng-get-initial-input ()
   "Get the default search string."
   (or (goldendict-ng-get-string-in-region)
       (goldendict-ng-get-word-at-point)))
-
-(defun goldendict-ng-check-executable-exists ()
-  "Signal a user error if the `goldendict-ng' executable is not found."
-  (unless (executable-find goldendict-ng-executable)
-    (user-error "`goldendict-ng' not found. Please set `goldendict-ng-executable'")))
-
-(defun goldendict-ng-check-string-nonempty (string)
-  "Signal a user error if STRING is an empty string."
-  (when (string-empty-p string)
-    (user-error "Please provide a nonempty search string")))
-
-;;;###autoload
-(defun goldendict-ng-version ()
-  "Print version info."
-  (interactive)
-  (require 'find-func)
-  (let ((emacs-version
-	 (with-temp-buffer
-	   (insert-file-contents (find-library-name "goldendict-ng"))
-	   (let ((contents (buffer-string)))
-	     (cond ((string-match ";; Version: \\([^ ;]+\\)" contents)
-		    (match-string-no-properties 1 contents))
-		   ((string-match "-pkg.el\"[ \f\t\n\r\v]*(([\f\t\n\r\v]*)[ \f\t\n\r\v]*\"\\([^ ;]+\\)\"" contents)
-		    (match-string-no-properties 1 contents))))))
-	(app-version
-	 (shell-command-to-string (format "%s --version" goldendict-ng-executable))))
-    (message "goldendict-ng Emacs package version %s\n\n%s" (string-trim emacs-version) app-version)))
 
 ;;;;; Flags
 
@@ -274,6 +257,46 @@ STRING is the search string."
 
 ;;;;;;; Language detection
 
+(defun goldendict-ng-get-matching-groups (string)
+  "Return the groups whose languages are detected in STRING."
+  (let ((result '()))
+    (dolist (pair goldendict-ng-groups)
+      (when (member (cdr pair) (goldendict-ng-get-matching-languages string))
+	(push (car pair) result)))
+    result))
+
+(defun goldendict-ng-get-matching-languages (string)
+  "Return a list of relevant languages detected in STRING.
+The languages to be checked against STRING are each of the languages set in
+`goldendict-ng-groups', i.e., the list of languages returned by
+`goldendict-ng-get-unique-languages'."
+  (let (result)
+    (dolist (lang (goldendict-ng-get-unique-languages))
+      (when (goldendict-ng-string-is-in-language-p string lang)
+	(setq result (cons lang result))))
+    result))
+
+(defun goldendict-ng-get-unique-languages ()
+  "Return a list of unique language values in `goldendict-ng-groups'."
+  (delq nil (delete-dups (mapcar 'cdr goldendict-ng-groups))))
+
+(defun goldendict-ng-string-is-in-language-p (string language)
+  "Return t iff each word in STRING exists in LANGUAGE."
+  (let ((results (mapcar (lambda (word)
+			   (goldendict-ng-word-is-in-language-p word language))
+			 (split-string string))))
+    (not (member nil results))))
+
+(defun goldendict-ng-word-is-in-language-p (word language)
+  "Return t iff WORD exists in LANGUAGE."
+  (unless (executable-find "aspell")
+    (user-error "Language detection requires `GNU Aspell'. Go here to install it:
+`http://aspell.net/'"))
+  (with-temp-buffer
+    (call-process-shell-command
+     (format "echo %s | aspell --lang=%s list" (shell-quote-argument word) language) nil t)
+    (<= (buffer-size) 1)))
+
 ;;;;;; --main-window
 
 (defun goldendict-ng-set-main-window-flag ()
@@ -298,46 +321,24 @@ STRING is the search string."
   "Set the value of the `no-tts' flag."
   (if goldendict-ng-no-tts " --no-tts" ""))
 
-(defun goldendict-ng-word-is-in-language-p (word language)
-  "Return t iff WORD exists in LANGUAGE."
-  (unless (executable-find "aspell")
-    (user-error "Language detection requires `GNU Aspell'. Go here to install it:
-`http://aspell.net/'"))
-  (with-temp-buffer
-    (call-process-shell-command
-     (format "echo %s | aspell --lang=%s list" (shell-quote-argument word) language) nil t)
-    (<= (buffer-size) 1)))
 ;;;;; Misc
 
-(defun goldendict-ng-string-is-in-language-p (string language)
-  "Return t iff each word in STRING exists in LANGUAGE."
-  (let ((results (mapcar (lambda (word)
-			   (goldendict-ng-word-is-in-language-p word language))
-			 (split-string string))))
-    (not (member nil results))))
-
-(defun goldendict-ng-get-unique-languages ()
-  "Return a list of unique language values in `goldendict-ng-groups'."
-  (delq nil (delete-dups (mapcar 'cdr goldendict-ng-groups))))
-
-(defun goldendict-ng-get-matching-languages (string)
-  "Return a list of relevant languages detected in STRING.
-The languages to be checked against STRING are each of the languages set in
-`goldendict-ng-groups', i.e., the list of languages returned by
-`goldendict-ng-get-unique-languages'."
-  (let (result)
-    (dolist (lang (goldendict-ng-get-unique-languages))
-      (when (goldendict-ng-string-is-in-language-p string lang)
-	(setq result (cons lang result))))
-    result))
-
-(defun goldendict-ng-get-matching-groups (string)
-  "Return the groups whose languages are detected in STRING."
-  (let ((result '()))
-    (dolist (pair goldendict-ng-groups)
-      (when (member (cdr pair) (goldendict-ng-get-matching-languages string))
-	(push (car pair) result)))
-    result))
+;;;###autoload
+(defun goldendict-ng-version ()
+  "Print version info."
+  (interactive)
+  (require 'find-func)
+  (let ((emacs-version
+	 (with-temp-buffer
+	   (insert-file-contents (find-library-name "goldendict-ng"))
+	   (let ((contents (buffer-string)))
+	     (cond ((string-match ";; Version: \\([^ ;]+\\)" contents)
+		    (match-string-no-properties 1 contents))
+		   ((string-match "-pkg.el\"[ \f\t\n\r\v]*(([\f\t\n\r\v]*)[ \f\t\n\r\v]*\"\\([^ ;]+\\)\"" contents)
+		    (match-string-no-properties 1 contents))))))
+	(app-version
+	 (shell-command-to-string (format "%s --version" goldendict-ng-executable))))
+    (message "goldendict-ng Emacs package version %s\n\n%s" (string-trim emacs-version) app-version)))
 
 ;;;;; Obsolete functions
 
