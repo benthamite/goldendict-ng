@@ -42,7 +42,7 @@
   :group 'goldendict-ng
   :type 'file)
 
-;;;;; group-related user options
+;;;;; Group-related user options
 
 (defcustom goldendict-ng-groups '()
   "Association list of of dictionary groups and their languages.
@@ -97,7 +97,7 @@ default."
   :group 'goldendict-ng
   :type 'boolean)
 
-;;;;; other user options
+;;;;; Other user options
 
 (defcustom goldendict-ng-use-active-region 'initial-input
   "Whether to use the active region when performing a search.
@@ -144,7 +144,7 @@ active, the settings for that user option will take precedence."
   :group 'goldendict-ng
   :type 'boolean)
 
-;;;;; obsolete variables
+;;;;; Obsolete variables
 
 (make-obsolete-variable 'goldendict-ng-groups-prompt nil "0.2.0")
 (make-obsolete-variable 'goldendict-ng-narrow-groups-to-matching-langs
@@ -153,9 +153,9 @@ active, the settings for that user option will take precedence."
 (make-obsolete-variable 'goldendict-ng-initial-input-use-active-region nil "0.2.0")
 (make-obsolete-variable 'goldendict-ng-initial-input-use-word-at-point nil "0.2.0")
 
-;;;; functions
+;;;; Functions
 
-;;;;; main
+;;;;; Search
 
 ;;;###autoload
 (defun goldendict-ng-search ()
@@ -243,7 +243,7 @@ active, the settings for that user option will take precedence."
 	 (shell-command-to-string (format "%s --version" goldendict-ng-executable))))
     (message "goldendict-ng Emacs package version %s\n\n%s" (string-trim emacs-version) app-version)))
 
-;;;;; set flags
+;;;;; Flags
 
 ;;;;;; --group-name
 
@@ -272,6 +272,8 @@ STRING is the search string."
       (car candidates)
     (completing-read "Group: " candidates nil goldendict-ng-groups-enforce)))
 
+;;;;;;; Language detection
+
 ;;;;;; --main-window
 
 (defun goldendict-ng-set-main-window-flag ()
@@ -296,8 +298,6 @@ STRING is the search string."
   "Set the value of the `no-tts' flag."
   (if goldendict-ng-no-tts " --no-tts" ""))
 
-;;;;; check language
-
 (defun goldendict-ng-word-is-in-language-p (word language)
   "Return t iff WORD exists in LANGUAGE."
   (unless (executable-find "aspell")
@@ -307,6 +307,7 @@ STRING is the search string."
     (call-process-shell-command
      (format "echo %s | aspell --lang=%s list" (shell-quote-argument word) language) nil t)
     (<= (buffer-size) 1)))
+;;;;; Misc
 
 (defun goldendict-ng-string-is-in-language-p (string language)
   "Return t iff each word in STRING exists in LANGUAGE."
@@ -338,7 +339,7 @@ The languages to be checked against STRING are each of the languages set in
 	(push (car pair) result)))
     result))
 
-;;;;; obsolete functions
+;;;;; Obsolete functions
 
 (make-obsolete 'goldendict-ng-set-initial-input nil "0.2.0")
 (make-obsolete 'goldendict-ng-group-name-flag nil "0.2.0")
