@@ -42,6 +42,8 @@
   :group 'goldendict-ng
   :type 'file)
 
+;;;;; group-related user options
+
 (defcustom goldendict-ng-groups '()
   "Association list of of dictionary groups and their languages.
 The first element of the association list is the name of the group and the
@@ -89,6 +91,8 @@ This user option has no effect if `goldendict-ng-groups' is empty, as it is by
 default."
   :group 'goldendict-ng
   :type 'boolean)
+
+;;;;; other user options
 
 (defcustom goldendict-ng-use-active-region 'initial-input
   "Whether to use the active region when performing a search.
