@@ -327,17 +327,20 @@ The languages to be checked against STRING are each of the languages set in
   "Print version info."
   (interactive)
   (require 'find-func)
-  (let ((emacs-version
+  (let ((package-version
 	 (with-temp-buffer
 	   (insert-file-contents (find-library-name "goldendict-ng"))
 	   (let ((contents (buffer-string)))
-	     (cond ((string-match ";; Version: \\([^ ;]+\\)" contents)
+	     (cond ((or (string-match
+			 ";; Version: \\([^ ;]+\\)" contents)
+			(string-match
+			 "-pkg.el\"[ \f\t\n\r\v]*(([\f\t\n\r\v]*)[ \f\t\n\r\v]*\"\\([^ ;]+\\)\"" contents))
 		    (match-string-no-properties 1 contents))
-		   ((string-match "-pkg.el\"[ \f\t\n\r\v]*(([\f\t\n\r\v]*)[ \f\t\n\r\v]*\"\\([^ ;]+\\)\"" contents)
-		    (match-string-no-properties 1 contents))))))
+		   (t
+		    "")))))
 	(app-version
 	 (shell-command-to-string (format "%s --version" goldendict-ng-executable))))
-    (message "goldendict-ng Emacs package version %s\n\n%s" (string-trim emacs-version) app-version)))
+    (message "goldendict-ng Emacs package version %s\n\n%s" (string-trim package-version) app-version)))
 
 ;;;;; Obsolete functions
 
