@@ -231,8 +231,7 @@ active, the settings for that user option will take precedence."
 ;;;;;; --group-name
 
 (defun goldendict-ng-set-group-name-flag (string)
-  "Set the value of the `group-name' flag.
-STRING is the search string."
+  "Set the value of the `group-name' flag for search string STRING."
   (if (null goldendict-ng-groups)
       ""
     (let* ((candidates (goldendict-ng-get-group-candidates string))
