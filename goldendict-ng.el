@@ -198,7 +198,7 @@ active, the settings for that user option will take precedence."
        (eq goldendict-ng-use-active-region 'bypass-prompt)))
 
 (defun goldendict-ng-get-string-in-region ()
-  "If the region is active, get the string in this region."
+  "If the region is active, return it."
   (when (and (region-active-p) goldendict-ng-use-active-region)
     (pcase major-mode
       ('pdf-view-mode
