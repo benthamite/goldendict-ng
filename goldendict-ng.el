@@ -82,6 +82,16 @@ default."
   :group 'goldendict-ng
   :type 'boolean)
 
+(defcustom goldendict-ng-auto-select-sole-candidate nil
+  "Whether to automatically select a group when it is the sole candidate.
+Note that the \"All\" group, which will be displayed if
+`goldendict-ng-show-all-group' is set to a non-nil value, will or will not count
+as a candidate depending on the value of
+`goldendict-ng-count-all-group-in-auto-selection'. See the docstring of that
+user option for details."
+  :group 'goldendict-ng
+  :type 'boolean)
+
 (defcustom goldendict-ng-show-all-group t
   "Whether to display the \"All\" group in addition to the user-specified groups.
 GoldenDict features a special \"All\" group that, when selected, shows all the
@@ -90,16 +100,6 @@ groups defined in `goldendict-ng-groups'.
 
 This user option has no effect if `goldendict-ng-groups' is empty, as it is by
 default."
-  :group 'goldendict-ng
-  :type 'boolean)
-
-(defcustom goldendict-ng-auto-select-sole-candidate nil
-  "Whether to automatically select a group when it is the sole candidate.
-Note that the \"All\" group, which will be displayed if
-`goldendict-ng-show-all-group' is set to a non-nil value, will or will not count
-as a candidate depending on the value of
-`goldendict-ng-count-all-group-in-auto-selection'. See the docstring of that
-user option for details."
   :group 'goldendict-ng
   :type 'boolean)
 

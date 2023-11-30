@@ -51,8 +51,8 @@ Here is a sample configuration:
 	
   ;; all user options below are set to their default values, for illustration purposes
   (setq goldendict-ng-groups-enforce nil)
-  (setq goldendict-ng-show-all-group t)
   (setq goldendict-ng-auto-select-sole-candidate nil)
+  (setq goldendict-ng-show-all-group t)
   (setq goldendict-ng-count-all-group-in-auto-selection t)
   (setq goldendict-ng-use-active-region 'initial-input)
   (setq goldendict-ng-use-word-at-point 'initial-input)
