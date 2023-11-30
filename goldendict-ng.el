@@ -94,7 +94,9 @@ default."
   :type 'boolean)
 
 (defcustom goldendict-ng-auto-select-sole-candidate nil
-  "Whether to automatically select a group when it is the sole candidate."
+  "Whether to automatically select a group when it is the sole candidate.
+Note that the \"All\" group, which will be displayed if
+`goldendict-ng-show-all-group' is set to a non-nil value, counts as a candidate."
   :group 'goldendict-ng
   :type 'boolean)
 
