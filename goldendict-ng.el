@@ -96,7 +96,23 @@ default."
 (defcustom goldendict-ng-auto-select-sole-candidate nil
   "Whether to automatically select a group when it is the sole candidate.
 Note that the \"All\" group, which will be displayed if
-`goldendict-ng-show-all-group' is set to a non-nil value, counts as a candidate."
+`goldendict-ng-show-all-group' is set to a non-nil value, will or will not count
+as a candidate depending on the value of
+`goldendict-ng-count-all-group-in-auto-selection'. See the docstring of that
+user option for details."
+  :group 'goldendict-ng
+  :type 'boolean)
+
+(defcustom goldendict-ng-count-all-group-in-auto-selection t
+  "Whether to count the \"All\" group as a candidate for automatic selection.
+When it and `goldendict-ng-auto-select-sole-candidate' are set to non-nil, the
+the \"All\" group will be automatically selected if and only if it is the sole
+candidate. If instead the variable is set to non-nil, the prompt will also be
+bypassed when, in addition to the \"All\" group, there is one other group, which
+will be automatically selected.
+
+This variable has no effect if `goldendict-ng-auto-select-sole-candidate' is set
+to nil."
   :group 'goldendict-ng
   :type 'boolean)
 
@@ -253,9 +269,22 @@ active, the settings for that user option will take precedence."
 
 (defun goldendict-ng-get-group-selection (candidates)
   "Return the selection for the group CANDIDATES."
-  (if (and goldendict-ng-auto-select-sole-candidate (length= candidates 1))
-      (car candidates)
-    (completing-read "Group: " candidates nil goldendict-ng-groups-enforce)))
+  (let ((len (length candidates))
+	(1st (car candidates)))
+    (if (and goldendict-ng-auto-select-sole-candidate (< len 3))
+	(cond
+	 ((= len 0)
+	  (user-error "Zero candidates. Set `goldendict-ng-show-all-group' to non-nil to run a search in these cases"))
+	 ((= len 1)
+	  1st)
+	 ((and (= len 2) (not goldendict-ng-count-all-group-in-auto-selection))
+	  (if (string= 1st "All") (cadr candidates) 1st))
+	 (t (goldendict-ng-prompt-for-group candidates)))
+      (goldendict-ng-prompt-for-group candidates))))
+
+(defun goldendict-ng-prompt-for-group (candidates)
+  "Prompt the user to select a group from CANDIDATES."
+  (completing-read "Group: " candidates nil goldendict-ng-groups-enforce))
 
 ;;;;;;; Language detection
 
