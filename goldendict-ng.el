@@ -221,7 +221,8 @@ active, the settings for that user option will take precedence."
   (when (and (region-active-p) goldendict-ng-use-active-region)
     (pcase major-mode
       ('pdf-view-mode
-       (car (pdf-view-active-region-text)))
+       (when (fboundp 'pdf-view-active-region-text) ; silence compiler warning
+	 (car (pdf-view-active-region-text))))
       (_
        (buffer-substring-no-properties
 	(region-beginning) (region-end))))))
