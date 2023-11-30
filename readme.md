@@ -1,6 +1,6 @@
-# goldendict-ng: Search GoldenDict from within Emacs
+# goldendict-ng
 
-`goldendict-ng` supports searching GoldenDict dictionaries from within Emacs. The package makes use of the command-line facilities provided by [goldendict-ng](https://github.com/xiaoyifang/goldendict-ng), a GoldenDict fork.
+This package uses the command line interface provided by [goldendict-ng](https://xiaoyifang.github.io/goldendict-ng/topic_commandline/) to trigger a GoldenDict search from within Emacs. The results themselves are displayed in GoldenDict.
 
 ## Requirements
 
