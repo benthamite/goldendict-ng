@@ -352,28 +352,6 @@ The languages to be checked against STRING are each of the languages set in
   "Set the value of the `no-tts' flag."
   (if goldendict-ng-no-tts " --no-tts" ""))
 
-;;;;; Misc
-
-;;;###autoload
-(defun goldendict-ng-version ()
-  "Print version info."
-  (interactive)
-  (require 'find-func)
-  (let ((package-version
-	 (with-temp-buffer
-	   (insert-file-contents (find-library-name "goldendict-ng"))
-	   (let ((contents (buffer-string)))
-	     (cond ((or (string-match
-			 ";; Version: \\([^ ;]+\\)" contents)
-			(string-match
-			 "-pkg.el\"[ \f\t\n\r\v]*(([\f\t\n\r\v]*)[ \f\t\n\r\v]*\"\\([^ ;]+\\)\"" contents))
-		    (match-string-no-properties 1 contents))
-		   (t
-		    "")))))
-	(app-version
-	 (shell-command-to-string (format "%s --version" goldendict-ng-executable))))
-    (message "goldendict-ng Emacs package version %s\n\n%s" (string-trim package-version) app-version)))
-
 ;;;;; Obsolete functions
 
 (make-obsolete 'goldendict-ng-set-initial-input nil "0.2.0")
