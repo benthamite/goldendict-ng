@@ -18,7 +18,7 @@ Clone this repository and add this to your `init.el` file:
 
 where `"path/to/goldendict-ng"` is the path to the local repository you just cloned.
 
-### Elpaca
+### Elpaca/Straight
 
 If you use the [elpaca](https://github.com/progfolio/elpaca) package manager, you just need to add this your `init.el` file:
 
@@ -29,6 +29,8 @@ If you use the [elpaca](https://github.com/progfolio/elpaca) package manager, yo
 	   :repo "benthamite/goldendict-ng")
   :demand t)
 ```
+
+If you use [straight](https://github.com/radian-software/straight.el), just replace `:elpaca` with `:straight` in the formula above.
 
 ## Configuration
 
