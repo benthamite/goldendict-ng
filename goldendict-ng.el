@@ -4,8 +4,8 @@
 
 ;; Author: Pablo Stafforini
 ;; URL: https://github.com/benthamite/goldendict-ng
-;; Package-Requires: ((emacs "24.1"))
-;; Version: 0.2.1
+;; Package-Requires: ((emacs "25.1"))
+;; Version: 0.3.0
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -46,7 +46,7 @@
 ;;;;; Group-related user options
 
 (defcustom goldendict-ng-groups '()
-  "Association list of of dictionary groups and their languages.
+  "Association list of dictionary groups and their languages.
 The first element of the association list is the name of the group and the
 second element is the source language of the dictionaries in that group.
 
@@ -105,9 +105,9 @@ default."
 
 (defcustom goldendict-ng-count-all-group-in-auto-selection t
   "Whether to count the \"All\" group as a candidate for automatic selection.
-When it and `goldendict-ng-auto-select-sole-candidate' are set to non-nil, the
+When it and `goldendict-ng-auto-select-sole-candidate' are set to non-nil,
 the \"All\" group will be automatically selected if and only if it is the sole
-candidate. If instead the variable is set to non-nil, the prompt will also be
+candidate. If instead the variable is set to nil, the prompt will also be
 bypassed when, in addition to the \"All\" group, there is one other group, which
 will be automatically selected.
 
@@ -149,7 +149,7 @@ active, the settings for that user option will take precedence."
   :type 'boolean)
 
 (defcustom goldendict-ng-scanpopup nil
-  "Whether to Force the word to be translated in scanpopup."
+  "Whether to force the word to be translated in scanpopup."
   :group 'goldendict-ng
   :type 'boolean)
 
@@ -196,19 +196,27 @@ active, the settings for that user option will take precedence."
 (defun goldendict-ng-search-string (string)
   "Search GoldenDict for string STRING."
   (goldendict-ng-check-string-nonempty string)
-  (let ((command (format "%s %s" goldendict-ng-executable (shell-quote-argument string))))
-    (call-process-shell-command (concat command
-					(goldendict-ng-set-group-name-flag string)
-					(goldendict-ng-set-main-window-flag)
-					(goldendict-ng-set-scanpopup-flag)
-					(goldendict-ng-set-reset-window-state-flag)
-					(goldendict-ng-set-no-tts-flag)
-					" &")
-				nil 0)))
+  (let ((args (goldendict-ng-build-args string)))
+    (apply #'start-process "goldendict-ng" nil goldendict-ng-executable args)))
+
+(defun goldendict-ng-build-args (string)
+  "Build the argument list for a GoldenDict search for STRING."
+  (let ((args (list string)))
+    (when-let ((group (goldendict-ng-get-group-name string)))
+      (setq args (append args (list "--group-name" group))))
+    (when goldendict-ng-main-window
+      (setq args (append args (list "--main-window"))))
+    (when goldendict-ng-scanpopup
+      (setq args (append args (list "--scanpopup"))))
+    (when goldendict-ng-reset-window-state
+      (setq args (append args (list "--reset-window-state"))))
+    (when goldendict-ng-no-tts
+      (setq args (append args (list "--no-tts"))))
+    args))
 
 (defun goldendict-ng-check-string-nonempty (string)
-  "Signal a user error if STRING is an empty string."
-  (when (string-empty-p string)
+  "Signal a user error if STRING is nil or an empty string."
+  (when (or (null string) (string-empty-p string))
     (user-error "Please provide a nonempty search string")))
 
 (defun goldendict-ng-bypass-prompt-string-in-region-p ()
@@ -250,20 +258,19 @@ active, the settings for that user option will take precedence."
 
 ;;;;;; --group-name
 
-(defun goldendict-ng-set-group-name-flag (string)
-  "Set the value of the `group-name' flag for search string STRING."
-  (if (null goldendict-ng-groups)
-      ""
+(defun goldendict-ng-get-group-name (string)
+  "Return the group name for search string STRING, or nil if groups are empty."
+  (unless (null goldendict-ng-groups)
     (let* ((candidates (goldendict-ng-get-group-candidates string))
 	   (selection (goldendict-ng-get-group-selection candidates)))
-      (format " --group-name %s" (shell-quote-argument selection)))))
+      selection)))
 
 (defun goldendict-ng-get-group-candidates (string)
   "Return the groups to be offered as completion candidates for STRING."
   (let ((user-groups
 	 (if goldendict-ng-narrow-groups-to-matching-languages
 	     (goldendict-ng-get-matching-groups string)
-	   (mapcar 'car goldendict-ng-groups))))
+	   (mapcar #'car goldendict-ng-groups))))
     (when goldendict-ng-show-all-group
       (push "All" user-groups))
     user-groups))
@@ -310,7 +317,7 @@ The languages to be checked against STRING are each of the languages set in
 
 (defun goldendict-ng-get-unique-languages ()
   "Return a list of unique language values in `goldendict-ng-groups'."
-  (delq nil (delete-dups (mapcar 'cdr goldendict-ng-groups))))
+  (delq nil (delete-dups (mapcar #'cdr goldendict-ng-groups))))
 
 (defun goldendict-ng-string-is-in-language-p (string language)
   "Return t iff each word in STRING exists in LANGUAGE."
@@ -325,39 +332,29 @@ The languages to be checked against STRING are each of the languages set in
     (user-error "Language detection requires `GNU Aspell'. Go here to install it:
 `http://aspell.net/'"))
   (with-temp-buffer
-    (call-process-shell-command
-     (format "echo %s | aspell --lang=%s list" (shell-quote-argument word) language) nil t)
+    (insert word)
+    (call-process-region (point-min) (point-max)
+			 "aspell" t t nil
+			 (concat "--lang=" language) "list")
     (<= (buffer-size) 1)))
 
-;;;;;; --main-window
-
-(defun goldendict-ng-set-main-window-flag ()
-  "Set the value of the `main-window' flag."
-  (if goldendict-ng-main-window " --main-window" ""))
-
-;;;;;; --scanpopup
-
-(defun goldendict-ng-set-scanpopup-flag ()
-  "Set the value of the `' flag."
-  (if goldendict-ng-scanpopup " --scanpopup" ""))
-
-;;;;;; --reset-window-state
-
-(defun goldendict-ng-set-reset-window-state-flag ()
-  "Set the value of the `reset-window-state' flag."
-  (if goldendict-ng-reset-window-state " --reset-window-state" ""))
-
-;;;;;; --no-tts
-
-(defun goldendict-ng-set-no-tts-flag ()
-  "Set the value of the `no-tts' flag."
-  (if goldendict-ng-no-tts " --no-tts" ""))
+;;;;;; Obsolete flag functions (superseded by `goldendict-ng-build-args')
 
 ;;;;; Obsolete functions
 
 (make-obsolete 'goldendict-ng-set-initial-input nil "0.2.0")
 (make-obsolete 'goldendict-ng-group-name-flag nil "0.2.0")
 (make-obsolete 'goldendict-ng-no-tts-flag nil "0.2.0")
+(make-obsolete 'goldendict-ng-set-group-name-flag
+	       'goldendict-ng-get-group-name "0.3.0")
+(make-obsolete 'goldendict-ng-set-main-window-flag
+	       'goldendict-ng-build-args "0.3.0")
+(make-obsolete 'goldendict-ng-set-scanpopup-flag
+	       'goldendict-ng-build-args "0.3.0")
+(make-obsolete 'goldendict-ng-set-reset-window-state-flag
+	       'goldendict-ng-build-args "0.3.0")
+(make-obsolete 'goldendict-ng-set-no-tts-flag
+	       'goldendict-ng-build-args "0.3.0")
 
 (provide 'goldendict-ng)
 
