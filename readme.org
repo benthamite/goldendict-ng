@@ -10,6 +10,8 @@
 #+texinfo_dir_title: GoldenDict-NG: (goldendict-ng)
 #+texinfo_dir_desc: Search GoldenDict from within Emacs
 
+*Note: this package is archived; it has been superseded by [[https://github.com/benthamite/johnson][johnson]].*
+
 This manual describes the features and customization options for the Emacs Lisp file =goldendict-ng.el=.
 
 * Overview

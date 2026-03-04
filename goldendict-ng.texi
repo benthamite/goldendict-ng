@@ -13,7 +13,6 @@
 
 @finalout
 @titlepage
-@title goldendict-ng: Search GoldenDict from within Emacs
 @author Pablo Stafforini (@email{pablo@@stafforini.com})
 @end titlepage
 
@@ -23,7 +22,9 @@
 @node Top
 @top goldendict-ng: Search GoldenDict from within Emacs
 
-This manual describes the features and customization options for the Emacs Lisp file @samp{goldendict-ng.el}.
+@strong{Note: this package is archived; it has been superseded by @uref{https://github.com/benthamite/johnson, johnson}.} @*
+
+This manual describes the features and customization options for the Emacs Lisp file @samp{goldendict-ng.el}. @*
 
 @end ifnottex
 
@@ -106,11 +107,11 @@ Indices
 @node Overview
 @chapter Overview
 
-@samp{goldendict-ng.el} provides an Emacs interface to @uref{https://xiaoyifang.github.io/goldendict-ng/, GoldenDict-NG}, a powerful open-source dictionary lookup program. The package invokes GoldenDict-NG's @uref{https://xiaoyifang.github.io/goldendict-ng/topic_commandline/, command-line interface} to trigger searches from within Emacs. The dictionary results themselves are displayed in GoldenDict-NG's own window, not inside Emacs.
+@samp{goldendict-ng.el} provides an Emacs interface to @uref{https://xiaoyifang.github.io/goldendict-ng/, GoldenDict-NG}, a powerful open-source dictionary lookup program. The package invokes GoldenDict-NG's @uref{https://xiaoyifang.github.io/goldendict-ng/topic_commandline/, command-line interface} to trigger searches from within Emacs. The dictionary results themselves are displayed in GoldenDict-NG's own window, not inside Emacs. @*
 
-The package centers on a single interactive command, @code{goldendict-ng-search}, which determines a search string from context (the active region, the word at point, or a minibuffer prompt) and launches GoldenDict-NG with the appropriate arguments. You can control which dictionary group is queried, whether results appear in the main window or a scanpopup, and various other GoldenDict-NG flags.
+The package centers on a single interactive command, @code{goldendict-ng-search}, which determines a search string from context (the active region, the word at point, or a minibuffer prompt) and launches GoldenDict-NG with the appropriate arguments. You can control which dictionary group is queried, whether results appear in the main window or a scanpopup, and various other GoldenDict-NG flags. @*
 
-A notable feature is automatic language detection: when you configure dictionary groups with their associated languages, the package can use GNU Aspell to identify the language of the search string and narrow the group selection accordingly. This is especially useful for multilingual users who maintain separate dictionary groups for different languages.
+A notable feature is automatic language detection: when you configure dictionary groups with their associated languages, the package can use GNU Aspell to identify the language of the search string and narrow the group selection accordingly. This is especially useful for multilingual users who maintain separate dictionary groups for different languages. @*
 
 @menu
 * Requirements::
@@ -122,11 +123,11 @@ A notable feature is automatic language detection: when you configure dictionary
 
 @itemize
 @item
-Emacs 25.1 or later.
+Emacs 25.1 or later. @*
 @item
-@uref{https://xiaoyifang.github.io/goldendict-ng/install/, GoldenDict-NG} must be installed and accessible on your system.
+@uref{https://xiaoyifang.github.io/goldendict-ng/install/, GoldenDict-NG} must be installed and accessible on your system. @*
 @item
-@uref{http://aspell.net/, GNU Aspell} is required only if you enable automatic language detection via @code{goldendict-ng-narrow-groups-to-matching-languages} (@ref{Language detection}). You will also need the relevant Aspell language dictionaries installed.
+@uref{http://aspell.net/, GNU Aspell} is required only if you enable automatic language detection via @code{goldendict-ng-narrow-groups-to-matching-languages} (@ref{Language detection}). You will also need the relevant Aspell language dictionaries installed. @*
 @end itemize
 
 @node Installation
@@ -143,7 +144,7 @@ Emacs 25.1 or later.
 @node Manual
 @subsection Manual
 
-Clone the repository and add it to your load path:
+Clone the repository and add it to your load path: @*
 
 @lisp
 (add-to-list 'load-path "/path/to/goldendict-ng")
@@ -203,21 +204,21 @@ Clone the repository and add it to your load path:
 @section Executable path
 
 @vindex goldendict-ng-executable
-The user option @code{goldendict-ng-executable} specifies the path to the GoldenDict-NG binary. It accepts a file path as a string. The default value is @code{"goldendict-ng"}, which assumes the executable is on your @code{PATH}.
+The user option @code{goldendict-ng-executable} specifies the path to the GoldenDict-NG binary. It accepts a file path as a string. The default value is @code{"goldendict-ng"}, which assumes the executable is on your @code{PATH}. @*
 
-On macOS, GoldenDict-NG is typically installed as an application bundle, so you will usually need to set this to the full path inside the bundle:
+On macOS, GoldenDict-NG is typically installed as an application bundle, so you will usually need to set this to the full path inside the bundle: @*
 
 @lisp
 (setq goldendict-ng-executable
       "/Applications/GoldenDict.app/Contents/MacOS/GoldenDict")
 @end lisp
 
-If the executable cannot be found at the specified path when you invoke @code{goldendict-ng-search}, the command signals an error with installation instructions.
+If the executable cannot be found at the specified path when you invoke @code{goldendict-ng-search}, the command signals an error with installation instructions. @*
 
 @node Dictionary groups
 @section Dictionary groups
 
-GoldenDict-NG organizes dictionaries into groups. The options in this section control how the package selects which group to search.
+GoldenDict-NG organizes dictionaries into groups. The options in this section control how the package selects which group to search. @*
 
 @menu
 * @code{goldendict-ng-groups}::
@@ -231,13 +232,13 @@ GoldenDict-NG organizes dictionaries into groups. The options in this section co
 @subsection @code{goldendict-ng-groups}
 
 @vindex goldendict-ng-groups
-The user option @code{goldendict-ng-groups} specifies an association list mapping dictionary group names to their language codes. Each element is a cons cell whose car is the group name (a string matching the group name in GoldenDict-NG) and whose cdr is an @uref{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes, ISO 639 language code} (a string such as @code{"en"} or @code{"fr"}). The default value is @code{'()} (an empty list).
+The user option @code{goldendict-ng-groups} specifies an association list mapping dictionary group names to their language codes. Each element is a cons cell whose car is the group name (a string matching the group name in GoldenDict-NG) and whose cdr is an @uref{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes, ISO 639 language code} (a string such as @code{"en"} or @code{"fr"}). The default value is @code{'()} (an empty list). @*
 
-When this list is non-empty, @code{goldendict-ng-search} prompts you to select a group before performing the search. The selected group is passed to GoldenDict-NG via its @samp{--group-name} flag. When the list is empty, no group selection occurs and GoldenDict-NG uses its own default behavior.
+When this list is non-empty, @code{goldendict-ng-search} prompts you to select a group before performing the search. The selected group is passed to GoldenDict-NG via its @samp{--group-name} flag. When the list is empty, no group selection occurs and GoldenDict-NG uses its own default behavior. @*
 
-The language codes are used by the language detection feature (@ref{Language detection}) to automatically narrow the group candidates.
+The language codes are used by the language detection feature (@ref{Language detection}) to automatically narrow the group candidates. @*
 
-Example configuration for a multilingual setup:
+Example configuration for a multilingual setup: @*
 
 @lisp
 (setq goldendict-ng-groups
@@ -251,44 +252,44 @@ Example configuration for a multilingual setup:
 @subsection @code{goldendict-ng-groups-enforce}
 
 @vindex goldendict-ng-groups-enforce
-The user option @code{goldendict-ng-groups-enforce} controls whether the group selection prompt requires you to choose from the listed candidates. When set to non-nil, @code{completing-read} uses the @code{REQUIRE-MATCH} argument, preventing you from entering an arbitrary group name. The default value is @code{nil}, which allows free-form input.
+The user option @code{goldendict-ng-groups-enforce} controls whether the group selection prompt requires you to choose from the listed candidates. When set to non-nil, @code{completing-read} uses the @code{REQUIRE-MATCH} argument, preventing you from entering an arbitrary group name. The default value is @code{nil}, which allows free-form input. @*
 
-Set this to @code{t} if you want to ensure that only your configured groups (and optionally the ``All'' group) can be selected. This option has no effect when @code{goldendict-ng-groups} is empty.
+Set this to @code{t} if you want to ensure that only your configured groups (and optionally the ``All'' group) can be selected. This option has no effect when @code{goldendict-ng-groups} is empty. @*
 
 @node @code{goldendict-ng-show-all-group}
 @subsection @code{goldendict-ng-show-all-group}
 
 @vindex goldendict-ng-show-all-group
-The user option @code{goldendict-ng-show-all-group} controls whether the special ``All'' group appears in the group selection prompt. GoldenDict-NG's ``All'' group searches across every dictionary in your database. When set to non-nil, ``All'' is prepended to the list of candidates derived from @code{goldendict-ng-groups} (@ref{@code{goldendict-ng-groups}}). The default value is @code{t}.
+The user option @code{goldendict-ng-show-all-group} controls whether the special ``All'' group appears in the group selection prompt. GoldenDict-NG's ``All'' group searches across every dictionary in your database. When set to non-nil, ``All'' is prepended to the list of candidates derived from @code{goldendict-ng-groups} (@ref{@code{goldendict-ng-groups}}). The default value is @code{t}. @*
 
-Set this to @code{nil} if you always want to search within a specific group and never want the option to search all dictionaries at once. This option has no effect when @code{goldendict-ng-groups} is empty.
+Set this to @code{nil} if you always want to search within a specific group and never want the option to search all dictionaries at once. This option has no effect when @code{goldendict-ng-groups} is empty. @*
 
 @node @code{goldendict-ng-auto-select-sole-candidate}
 @subsection @code{goldendict-ng-auto-select-sole-candidate}
 
 @vindex goldendict-ng-auto-select-sole-candidate
-The user option @code{goldendict-ng-auto-select-sole-candidate} controls whether the group selection prompt is bypassed when there is only one candidate. When set to non-nil and only one group matches (after language-based filtering, if enabled), that group is selected automatically without prompting. The default value is @code{nil}.
+The user option @code{goldendict-ng-auto-select-sole-candidate} controls whether the group selection prompt is bypassed when there is only one candidate. When set to non-nil and only one group matches (after language-based filtering, if enabled), that group is selected automatically without prompting. The default value is @code{nil}. @*
 
-This is especially useful in conjunction with @code{goldendict-ng-narrow-groups-to-matching-languages} (@ref{Language detection}): when the search string is detected as belonging to a single language and only one group is configured for that language, the search proceeds immediately.
+This is especially useful in conjunction with @code{goldendict-ng-narrow-groups-to-matching-languages} (@ref{Language detection}): when the search string is detected as belonging to a single language and only one group is configured for that language, the search proceeds immediately. @*
 
-The interaction between this option and the ``All'' group is governed by @code{goldendict-ng-count-all-group-in-auto-selection} (@ref{@code{goldendict-ng-count-all-group-in-auto-selection}}).
+The interaction between this option and the ``All'' group is governed by @code{goldendict-ng-count-all-group-in-auto-selection} (@ref{@code{goldendict-ng-count-all-group-in-auto-selection}}). @*
 
 @node @code{goldendict-ng-count-all-group-in-auto-selection}
 @subsection @code{goldendict-ng-count-all-group-in-auto-selection}
 
 @vindex goldendict-ng-count-all-group-in-auto-selection
-The user option @code{goldendict-ng-count-all-group-in-auto-selection} controls whether the ``All'' group counts as a candidate for the purposes of auto-selection. The default value is @code{t}.
+The user option @code{goldendict-ng-count-all-group-in-auto-selection} controls whether the ``All'' group counts as a candidate for the purposes of auto-selection. The default value is @code{t}. @*
 
-When @code{goldendict-ng-auto-select-sole-candidate} is non-nil and this option is also non-nil (@ref{@code{goldendict-ng-auto-select-sole-candidate}}), auto-selection occurs only when there is truly one candidate (counting ``All''). In practice, this means that if you have one matching user group plus ``All'', you will still be prompted.
+When @code{goldendict-ng-auto-select-sole-candidate} is non-nil and this option is also non-nil (@ref{@code{goldendict-ng-auto-select-sole-candidate}}), auto-selection occurs only when there is truly one candidate (counting ``All''). In practice, this means that if you have one matching user group plus ``All'', you will still be prompted. @*
 
-When this option is set to @code{nil}, the ``All'' group is excluded from the count. This means that if there is exactly one user group plus ``All'', the user group is selected automatically without prompting, which is typically the desired behavior for users who configure specific groups and rarely want to search all dictionaries.
+When this option is set to @code{nil}, the ``All'' group is excluded from the count. This means that if there is exactly one user group plus ``All'', the user group is selected automatically without prompting, which is typically the desired behavior for users who configure specific groups and rarely want to search all dictionaries. @*
 
-This option has no effect when @code{goldendict-ng-auto-select-sole-candidate} is @code{nil}.
+This option has no effect when @code{goldendict-ng-auto-select-sole-candidate} is @code{nil}. @*
 
 @node Search input
 @section Search input
 
-The options in this section control how @code{goldendict-ng-search} determines the search string. The package checks for input sources in the following order of priority: (1) the active region, (2) the word at point, (3) a minibuffer prompt.
+The options in this section control how @code{goldendict-ng-search} determines the search string. The package checks for input sources in the following order of priority: (1) the active region, (2) the word at point, (3) a minibuffer prompt. @*
 
 @menu
 * @code{goldendict-ng-use-active-region}::
@@ -299,37 +300,37 @@ The options in this section control how @code{goldendict-ng-search} determines t
 @subsection @code{goldendict-ng-use-active-region}
 
 @vindex goldendict-ng-use-active-region
-The user option @code{goldendict-ng-use-active-region} controls whether and how the active region is used when performing a search. It accepts one of three values:
+The user option @code{goldendict-ng-use-active-region} controls whether and how the active region is used when performing a search. It accepts one of three values: @*
 
 @table @asis
 @item @code{nil}
-Ignore the active region entirely.
+Ignore the active region entirely. @*
 @item @code{bypass-prompt}
-Use the text in the active region as the search string and skip the minibuffer prompt. The search is performed immediately.
+Use the text in the active region as the search string and skip the minibuffer prompt. The search is performed immediately. @*
 @item @code{initial-input}
-Use the text in the active region as the initial input for the minibuffer prompt. You can edit the text before confirming.
+Use the text in the active region as the initial input for the minibuffer prompt. You can edit the text before confirming. @*
 @end table
 
-The default value is @code{initial-input}.
+The default value is @code{initial-input}. @*
 
-When the major mode is @code{pdf-view-mode} (from the @samp{pdf-tools} package), the region text is obtained via @code{pdf-view-active-region-text} instead of @code{buffer-substring-no-properties}.
+When the major mode is @code{pdf-view-mode} (from the @samp{pdf-tools} package), the region text is obtained via @code{pdf-view-active-region-text} instead of @code{buffer-substring-no-properties}. @*
 
-This option takes precedence over @code{goldendict-ng-use-word-at-point} (@ref{@code{goldendict-ng-use-word-at-point}}) when both are non-nil and a region is active.
+This option takes precedence over @code{goldendict-ng-use-word-at-point} (@ref{@code{goldendict-ng-use-word-at-point}}) when both are non-nil and a region is active. @*
 
 @node @code{goldendict-ng-use-word-at-point}
 @subsection @code{goldendict-ng-use-word-at-point}
 
 @vindex goldendict-ng-use-word-at-point
-The user option @code{goldendict-ng-use-word-at-point} controls whether and how the word at point is used when performing a search. It accepts the same three values as @code{goldendict-ng-use-active-region}: @code{nil}, @code{bypass-prompt}, or @code{initial-input}. The default value is @code{initial-input}.
+The user option @code{goldendict-ng-use-word-at-point} controls whether and how the word at point is used when performing a search. It accepts the same three values as @code{goldendict-ng-use-active-region}: @code{nil}, @code{bypass-prompt}, or @code{initial-input}. The default value is @code{initial-input}. @*
 
-When set to @code{bypass-prompt} and point is on a word, the search is performed immediately using that word without any prompting. When set to @code{initial-input}, the word at point is placed in the minibuffer prompt as editable initial input.
+When set to @code{bypass-prompt} and point is on a word, the search is performed immediately using that word without any prompting. When set to @code{initial-input}, the word at point is placed in the minibuffer prompt as editable initial input. @*
 
-If @code{goldendict-ng-use-active-region} is non-nil and a region is currently active, the region takes precedence over this option (@ref{@code{goldendict-ng-use-active-region}}).
+If @code{goldendict-ng-use-active-region} is non-nil and a region is currently active, the region takes precedence over this option (@ref{@code{goldendict-ng-use-active-region}}). @*
 
 @node GoldenDict-NG display flags
 @section GoldenDict-NG display flags
 
-These options correspond directly to GoldenDict-NG's command-line flags and control how the application displays results.
+These options correspond directly to GoldenDict-NG's command-line flags and control how the application displays results. @*
 
 @menu
 * @code{goldendict-ng-main-window}::
@@ -342,27 +343,27 @@ These options correspond directly to GoldenDict-NG's command-line flags and cont
 @subsection @code{goldendict-ng-main-window}
 
 @vindex goldendict-ng-main-window
-The user option @code{goldendict-ng-main-window} controls whether the search results are forced to appear in GoldenDict-NG's main window. When set to non-nil, the @samp{--main-window} flag is passed to the executable. The default value is @code{nil}.
+The user option @code{goldendict-ng-main-window} controls whether the search results are forced to appear in GoldenDict-NG's main window. When set to non-nil, the @samp{--main-window} flag is passed to the executable. The default value is @code{nil}. @*
 
 @node @code{goldendict-ng-scanpopup}
 @subsection @code{goldendict-ng-scanpopup}
 
 @vindex goldendict-ng-scanpopup
-The user option @code{goldendict-ng-scanpopup} controls whether the search results are forced to appear in GoldenDict-NG's scanpopup (a floating tooltip-like window). When set to non-nil, the @samp{--scanpopup} flag is passed to the executable. The default value is @code{nil}.
+The user option @code{goldendict-ng-scanpopup} controls whether the search results are forced to appear in GoldenDict-NG's scanpopup (a floating tooltip-like window). When set to non-nil, the @samp{--scanpopup} flag is passed to the executable. The default value is @code{nil}. @*
 
 @node @code{goldendict-ng-reset-window-state}
 @subsection @code{goldendict-ng-reset-window-state}
 
 @vindex goldendict-ng-reset-window-state
-The user option @code{goldendict-ng-reset-window-state} controls whether GoldenDict-NG's window state is reset when performing a search. When set to non-nil, the @samp{--reset-window-state} flag is passed to the executable. The default value is @code{nil}.
+The user option @code{goldendict-ng-reset-window-state} controls whether GoldenDict-NG's window state is reset when performing a search. When set to non-nil, the @samp{--reset-window-state} flag is passed to the executable. The default value is @code{nil}. @*
 
 @node @code{goldendict-ng-no-tts}
 @subsection @code{goldendict-ng-no-tts}
 
 @vindex goldendict-ng-no-tts
-The user option @code{goldendict-ng-no-tts} controls whether text-to-speech is disabled for the search. When set to non-nil, the @samp{--no-tts} flag is passed to the executable. The default value is @code{nil}.
+The user option @code{goldendict-ng-no-tts} controls whether text-to-speech is disabled for the search. When set to non-nil, the @samp{--no-tts} flag is passed to the executable. The default value is @code{nil}. @*
 
-Set this to @code{t} if GoldenDict-NG's automatic pronunciation is disruptive during your workflow.
+Set this to @code{t} if GoldenDict-NG's automatic pronunciation is disruptive during your workflow. @*
 
 @node Commands
 @chapter Commands
@@ -375,26 +376,26 @@ Set this to @code{t} if GoldenDict-NG's automatic pronunciation is disruptive du
 @section Searching a dictionary
 
 @findex goldendict-ng-search
-The command @code{goldendict-ng-search} is the package's sole interactive entry point. Invoke it with @samp{M-x goldendict-ng-search} or bind it to a convenient key:
+The command @code{goldendict-ng-search} is the package's sole interactive entry point. Invoke it with @samp{M-x goldendict-ng-search} or bind it to a convenient key: @*
 
 @lisp
 (keymap-global-set "M-s d" #'goldendict-ng-search)
 @end lisp
 
-The command determines the search string using the following logic:
+The command determines the search string using the following logic: @*
 
 @enumerate
 @item
-If the region is active and @code{goldendict-ng-use-active-region} is set to @code{bypass-prompt} (@ref{@code{goldendict-ng-use-active-region}}), the region text is used immediately.
+If the region is active and @code{goldendict-ng-use-active-region} is set to @code{bypass-prompt} (@ref{@code{goldendict-ng-use-active-region}}), the region text is used immediately. @*
 @item
-Otherwise, if point is on a word and @code{goldendict-ng-use-word-at-point} is set to @code{bypass-prompt} (@ref{@code{goldendict-ng-use-word-at-point}}), the word at point is used immediately.
+Otherwise, if point is on a word and @code{goldendict-ng-use-word-at-point} is set to @code{bypass-prompt} (@ref{@code{goldendict-ng-use-word-at-point}}), the word at point is used immediately. @*
 @item
-Otherwise, a minibuffer prompt appears. If a region or word at point is available and the corresponding option is set to @code{initial-input}, that text is pre-filled in the prompt.
+Otherwise, a minibuffer prompt appears. If a region or word at point is available and the corresponding option is set to @code{initial-input}, that text is pre-filled in the prompt. @*
 @end enumerate
 
-After obtaining the search string, the command optionally prompts for a dictionary group (@ref{Dictionary groups}) if @code{goldendict-ng-groups} is non-empty. It then launches GoldenDict-NG asynchronously as a subprocess with the appropriate arguments.
+After obtaining the search string, the command optionally prompts for a dictionary group (@ref{Dictionary groups}) if @code{goldendict-ng-groups} is non-empty. It then launches GoldenDict-NG asynchronously as a subprocess with the appropriate arguments. @*
 
-If the GoldenDict-NG executable cannot be found, the command signals a user error with a link to the installation page.
+If the GoldenDict-NG executable cannot be found, the command signals a user error with a link to the installation page. @*
 
 @node Functions
 @chapter Functions
@@ -409,7 +410,7 @@ If the GoldenDict-NG executable cannot be found, the command signals a user erro
 @section Programmatic search
 
 @findex goldendict-ng-search-string
-The function @code{goldendict-ng-search-string} performs a GoldenDict-NG search for a given string. It validates that the string is non-empty, builds the argument list via @code{goldendict-ng-build-args} (@ref{Argument building}), and launches the subprocess. This function is useful for integrating GoldenDict-NG searches into custom workflows or other packages.
+The function @code{goldendict-ng-search-string} performs a GoldenDict-NG search for a given string. It validates that the string is non-empty, builds the argument list via @code{goldendict-ng-build-args} (@ref{Argument building}), and launches the subprocess. This function is useful for integrating GoldenDict-NG searches into custom workflows or other packages. @*
 
 @lisp
 (goldendict-ng-search-string "serendipity")
@@ -419,9 +420,9 @@ The function @code{goldendict-ng-search-string} performs a GoldenDict-NG search 
 @section Argument building
 
 @findex goldendict-ng-build-args
-The function @code{goldendict-ng-build-args} constructs the list of command-line arguments for a search. It takes the search string and returns a list that includes the string itself, any @samp{--group-name} flag (if groups are configured), and the display flags (@code{--main-window}, @code{--scanpopup}, @code{--reset-window-state}, @code{--no-tts}) according to the current user option values.
+The function @code{goldendict-ng-build-args} constructs the list of command-line arguments for a search. It takes the search string and returns a list that includes the string itself, any @samp{--group-name} flag (if groups are configured), and the display flags (@code{--main-window}, @code{--scanpopup}, @code{--reset-window-state}, @code{--no-tts}) according to the current user option values. @*
 
-This function is useful if you want to inspect or modify the arguments before launching the process yourself.
+This function is useful if you want to inspect or modify the arguments before launching the process yourself. @*
 
 @node Language detection
 @section Language detection
@@ -430,16 +431,16 @@ This function is useful if you want to inspect or modify the arguments before la
 @findex goldendict-ng-get-matching-languages
 @findex goldendict-ng-word-is-in-language-p
 @findex goldendict-ng-string-is-in-language-p
-When @code{goldendict-ng-narrow-groups-to-matching-languages} is non-nil, the package uses GNU Aspell to detect which languages appear in the search string. It then narrows the group selection candidates to only those groups whose language matches.
+When @code{goldendict-ng-narrow-groups-to-matching-languages} is non-nil, the package uses GNU Aspell to detect which languages appear in the search string. It then narrows the group selection candidates to only those groups whose language matches. @*
 
-The detection works as follows: for each unique language in @code{goldendict-ng-groups}, the function @code{goldendict-ng-string-is-in-language-p} checks whether every word in the search string is recognized by Aspell for that language. A word is considered to belong to a language if Aspell does not list it as misspelled (checked by @code{goldendict-ng-word-is-in-language-p}). The function @code{goldendict-ng-get-matching-groups} collects all groups whose language passes this test.
+The detection works as follows: for each unique language in @code{goldendict-ng-groups}, the function @code{goldendict-ng-string-is-in-language-p} checks whether every word in the search string is recognized by Aspell for that language. A word is considered to belong to a language if Aspell does not list it as misspelled (checked by @code{goldendict-ng-word-is-in-language-p}). The function @code{goldendict-ng-get-matching-groups} collects all groups whose language passes this test. @*
 
-Note that this approach works best for single-language search strings. A multi-word string must have every word recognized in a given language for that language to match.
+Note that this approach works best for single-language search strings. A multi-word string must have every word recognized in a given language for that language to match. @*
 
 @node Sample configuration
 @chapter Sample configuration
 
-Here is a comprehensive example showing all user options:
+Here is a comprehensive example showing all user options: @*
 
 @lisp
 (use-package goldendict-ng
@@ -479,17 +480,17 @@ Here is a comprehensive example showing all user options:
 @node ``goldendict-ng not found''
 @section ``goldendict-ng not found''
 
-This error means @code{executable-find} cannot locate the binary specified in @code{goldendict-ng-executable} (@ref{Executable path}). Verify that GoldenDict-NG is installed and set the user option to the full path of the executable.
+This error means @code{executable-find} cannot locate the binary specified in @code{goldendict-ng-executable} (@ref{Executable path}). Verify that GoldenDict-NG is installed and set the user option to the full path of the executable. @*
 
 @node ``Language detection requires GNU Aspell''
 @section ``Language detection requires GNU Aspell''
 
-This error appears when @code{goldendict-ng-narrow-groups-to-matching-languages} is non-nil but Aspell is not installed (@ref{Language detection}). Install Aspell and the relevant language dictionaries for your configured groups.
+This error appears when @code{goldendict-ng-narrow-groups-to-matching-languages} is non-nil but Aspell is not installed (@ref{Language detection}). Install Aspell and the relevant language dictionaries for your configured groups. @*
 
 @node ``Zero candidates''
 @section ``Zero candidates''
 
-This error means that, after language-based filtering, no dictionary groups match the search string, and @code{goldendict-ng-show-all-group} is @code{nil} (@ref{@code{goldendict-ng-show-all-group}}). Either set @code{goldendict-ng-show-all-group} to @code{t} so the ``All'' group is always available as a fallback, or add more language groups to your configuration.
+This error means that, after language-based filtering, no dictionary groups match the search string, and @code{goldendict-ng-show-all-group} is @code{nil} (@ref{@code{goldendict-ng-show-all-group}}). Either set @code{goldendict-ng-show-all-group} to @code{t} so the ``All'' group is always available as a fallback, or add more language groups to your configuration. @*
 
 @node Indices
 @chapter Indices
